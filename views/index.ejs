@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blog App</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <h1>Make new posts</h1>
+  <form action="/blog" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Title:</label>
+    <input type="text" name="title" required>
+
+    <label>Content:</label>
+    <textarea name="content" required></textarea>
+
+    <button type="submit">Post</button>
+  </form>
+  <hr>
+
+  <h2>Posts</h2>
+  <% posts.forEach(function(post) { %>
+  <div class="post">
+    <h3><%= post.title %></h3>
+    <p><%= post.content %></p>
+    <p><em><%= post.name %> on <%= post.createdAt.toLocaleString() %></em></p>
+
+    <a href="/blog/<%= post.id %>/edit">Edit</a>
+
+    <form action="/blog/<%= post.id %>?_method=DELETE" method="POST" style="display:inline;">
+      <button type="submit">Delete</button>
+    </form>
+  </div>
+  <% }); %>
+</body>
+
+</html>
