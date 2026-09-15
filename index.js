@@ -6,25 +6,25 @@ const PORT = 3000;
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true })); 
-app.use(express.static('public'));                
-app.use(methodOverride('_method'));                
+app.use(express.urlencoded({ extended: true })); // parse form data into req.body
+app.use(express.static('public'));                // serve CSS/JS files from /public
+app.use(methodOverride('_method'));                // allow forms to fake PUT/DELETE requests
 
 let posts = [];
 let nextId = 1;
 
-
+// READ: show homepage with all posts
 app.get('/', (req, res) => {
   res.render('index', { posts: posts });
 });
 
-
+// READ: show edit form pre-filled with one post's current data
 app.get('/blog/:id/edit', (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
   res.render('edit', { post: post });
 });
 
-
+// UPDATE: save changes to an existing post
 app.put('/blog/:id', (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
 
@@ -35,6 +35,7 @@ app.put('/blog/:id', (req, res) => {
   res.redirect('/');
 });
 
+// CREATE: add a new post to the array
 app.post('/blog', (req, res) => {
   const newPost = {
     id: nextId++,
@@ -48,6 +49,7 @@ app.post('/blog', (req, res) => {
   res.redirect('/');
 });
 
+// DELETE: remove a post from the array
 app.delete('/blog/:id', (req, res) => {
   posts = posts.filter(p => p.id != req.params.id);
   res.redirect('/');
