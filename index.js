@@ -1,24 +1,25 @@
 const express = require('express');
 const methodOverride = require('method-override');
+const axios = require('axios');
 
 const app = express();
 const PORT = 3000;
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true })); // parse form data into req.body
-app.use(express.static('public'));                // serve CSS/JS files from /public
-app.use(methodOverride('_method'));                // allow forms to fake PUT/DELETE requests
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.static('public'));               
+app.use(methodOverride('_method'));             
 
 let posts = [];
 let nextId = 1;
 
-// READ: show homepage with all posts
+
 app.get('/', (req, res) => {
   res.render('index', { posts: posts });
 });
 
-// READ: show edit form pre-filled with one post's current data
+
 app.get('/blog/:id/edit', (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
   res.render('edit', { post: post });
@@ -35,7 +36,7 @@ app.put('/blog/:id', (req, res) => {
   res.redirect('/');
 });
 
-// CREATE: add a new post to the array
+
 app.post('/blog', (req, res) => {
   const newPost = {
     id: nextId++,
@@ -57,4 +58,25 @@ app.delete('/blog/:id', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+});
+
+///explain in video
+
+app.post('/joke', async (req, res) => {
+  const category = req.body.category;
+
+  try {
+    const response = await axios.get(
+      `https://v2.jokeapi.dev/joke/${category}?type=single&safe-mode`
+    );
+
+    if (response.data.error) {
+      return res.render('index', { posts: posts, error: 'No joke found.' });
+    }
+
+    res.render('index', { posts: posts, joke: response.data.joke });
+
+  }catch (err){
+    res.render('index', { posts: posts, error: "Joke service unresponsive" });
+  }
 });

@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Blog App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 
@@ -19,7 +20,30 @@
 
     <button type="submit">Post</button>
   </form>
+
+  <!-- For video -->
   <hr>
+  <section class="joke-box">
+  <h2>Tell Me a Joke</h2>
+  <form action="/joke" method="POST">
+    <label>Category:</label>
+    <select name="category">
+      <option value="Any">Any</option>
+      <option value="Programming">Programming</option>
+      <option value="Pun">Pun</option>
+      <option value="Misc">Misc</option>
+    </select>
+    <button type="submit">Get Joke</button>
+  </form>
+
+  <% if (locals.joke) { %>
+    <p class="joke"><%= joke %></p>
+  <% } %>
+  <% if (locals.error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
+</section>
+<hr>
 
   <h2>Posts</h2>
   <% posts.forEach(function(post) { %>
