@@ -2,25 +2,24 @@
 <html>
 <head>
   <title>Edit Post</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <h1>Edit Post</h1>
 
-  <form action="/blog/<%= post.id %>?_method=PUT" method="POST">
-    <label>Name:</label>
-    <input type="text" name="name" value="<%= post.name %>" required>
-
+  <form action="/blog/<%= post.blog_id %>?_method=PUT" method="POST">
     <label>Title:</label>
     <input type="text" name="title" value="<%= post.title %>" required>
 
     <label>Content:</label>
-    <textarea name="content" required><%= post.content %></textarea>
+    <textarea name="content" required><%= post.body %></textarea>
 
     <button type="submit">Save Changes</button>
   </form>
 
-  <a href="/">Cancel</a>
-
+  <p><a href="/">Cancel</a></p>
 </body>
+
 </html>

@@ -7,56 +7,52 @@
 </head>
 
 <body>
-  <h1>Make new posts</h1>
-  <form action="/blog" method="POST">
-    <label>Name:</label>
-    <input type="text" name="name" required>
+  <nav>
+    <% if (currentUser) { %>
+      <span>Signed in as <strong><%= currentUser.name %></strong></span>
+      <form action="/signout" method="POST" style="display:inline;">
+        <button type="submit">Sign Out</button>
+      </form>
+    <% } else { %>
+      <a href="/signin">Sign In</a> | <a href="/signup">Sign Up</a>
+    <% } %>
+  </nav>
 
-    <label>Title:</label>
-    <input type="text" name="title" required>
-
-    <label>Content:</label>
-    <textarea name="content" required></textarea>
-
-    <button type="submit">Post</button>
-  </form>
-
-  <!-- For video -->
-  <hr>
-  <section class="joke-box">
-  <h2>Tell Me a Joke</h2>
-  <form action="/joke" method="POST">
-    <label>Category:</label>
-    <select name="category">
-      <option value="Any">Any</option>
-      <option value="Programming">Programming</option>
-      <option value="Pun">Pun</option>
-      <option value="Misc">Misc</option>
-    </select>
-    <button type="submit">Get Joke</button>
-  </form>
-
-  <% if (locals.joke) { %>
-    <p class="joke"><%= joke %></p>
-  <% } %>
   <% if (locals.error) { %>
     <p class="error"><%= error %></p>
   <% } %>
-</section>
-<hr>
+
+  <% if (currentUser) { %>
+    <h1>Make new posts</h1>
+    <form action="/blog" method="POST">
+      <label>Title:</label>
+      <input type="text" name="title" required>
+
+      <label>Content:</label>
+      <textarea name="content" required></textarea>
+
+      <button type="submit">Post</button>
+    </form>
+  <% } else { %>
+    <h1>Welcome</h1>
+    <p><a href="/signin">Sign in</a> to write, edit, or delete your own posts.</p>
+  <% } %>
+  <hr>
 
   <h2>Posts</h2>
   <% posts.forEach(function(post) { %>
   <div class="post">
     <h3><%= post.title %></h3>
-    <p><%= post.content %></p>
-    <p><em><%= post.name %> on <%= post.createdAt.toLocaleString() %></em></p>
+    <p><%= post.body %></p>
+    <p><em><%= post.creator_name %> on <%= post.date_created.toLocaleString() %></em></p>
 
-    <a href="/blog/<%= post.id %>/edit">Edit</a>
+    <% if (currentUser && currentUser.user_id === post.creator_user_id) { %>
+      <a href="/blog/<%= post.blog_id %>/edit">Edit</a>
 
-    <form action="/blog/<%= post.id %>?_method=DELETE" method="POST" style="display:inline;">
-      <button type="submit">Delete</button>
-    </form>
+      <form action="/blog/<%= post.blog_id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit">Delete</button>
+      </form>
+    <% } %>
   </div>
   <% }); %>
 </body>
